@@ -1,24 +1,28 @@
 import { IncomingMessage, ServerResponse } from "http";
+import { PodcastTransferModel } from "../models/podcast-DTO";
 import { serviceListEpisodes } from "../services/list-episodes-service";
 import { serviceFilterEpisodes } from "../services/filter-episodes-service";
-import { HttpStatusCode } from "../utils/http-status-code";
 
 
 export const getListEpisodes = async (req: IncomingMessage, res: ServerResponse) => {
 
-  const content = await serviceListEpisodes()
+  const content: PodcastTransferModel = await serviceListEpisodes()
 
-  res.writeHead(HttpStatusCode.OK, { 'content-type': "application/json" });
+  res.writeHead(content.statusCode, { 'content-type': "application/json" });
 
-  res.end(JSON.stringify(content))
+  res.write(JSON.stringify(content.body))
+
+  res.end()
 }
 
 
 export const getFilterEpisodes = async (req: IncomingMessage, res: ServerResponse) => {
 
-  const content = await serviceFilterEpisodes(req.url)
+  const content: PodcastTransferModel = await serviceFilterEpisodes(req.url)
 
-  res.writeHead(HttpStatusCode.OK, { 'content-type': "application/json" });
+  res.writeHead(content.statusCode, { 'content-type': "application/json" });
 
-  res.end(JSON.stringify(content))
+  res.write(JSON.stringify(content.body))
+
+  res.end()
 }
